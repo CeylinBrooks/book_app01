@@ -12,3 +12,10 @@ app.set('view engine', 'ejs');
 app.listen(PORT, ()=> {
     console.log(`Now listening on port ${PORT}`)
 });
+
+app.get('/',homeHandler);
+
+function homeHandler(request, response) {
+    response.status(200).render('index');
+}
+
