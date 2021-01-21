@@ -2,17 +2,22 @@
 
 const express = require('express');
 const superagent = require('superagent');
+const pg = require ('pg');
+const cors = require ('cors');
+const { response } = require('express');
+
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('error', err => console.error(err));
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Express Middleware
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
-<<<<<<< HEAD
-app.post('/searches', searchResults)
-=======
 require('dotenv').config();
 require('ejs');
 
@@ -20,7 +25,6 @@ function collectSearchResults(request, response) {
     let query = respsonse.body.search[0];
     let category = response.body.search[1];
     let url = "http://googleapis.com/books/v1/volumes?q="
->>>>>>> d9f114f0a565943297cd32e7356ac96b0d1fe227
 
     if (category === 'title') { url += `intitle:${query}` };
     if (category === 'author') { url += `inauthor:${category}` };
@@ -40,26 +44,13 @@ function handleError(res){
     return res.status(500).render('pages/error.ejs');
 }
 
-
+// Routes
 app.get('/', homeHandler);
 
 function homeHandler(request, response) {
     response.status(200).render('index');
 }
 
-<<<<<<< HEAD
-
-//Routes
-
-
-//Constructors
-function Book (obj){
-    this.title =
-    this.author =
-    this.description =
-    this.images =
-}
-=======
 function renderTest(request, response) {
     response.render('pages/index.ejs');
 }
@@ -74,4 +65,3 @@ function Book(obj) {
 app.listen(PORT, () => {
     console.log(`Now listening on port ${PORT}`)
 });
->>>>>>> d9f114f0a565943297cd32e7356ac96b0d1fe227
