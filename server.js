@@ -9,6 +9,7 @@ const { response } = require('express');
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
+console.log(client);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
