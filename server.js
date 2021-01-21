@@ -2,8 +2,8 @@
 
 const express = require('express');
 const superagent = require('superagent');
-const pg = require ('pg');
-const cors = require ('cors');
+const pg = require('pg');
+const cors = require('cors');
 const { response } = require('express');
 
 const client = new pg.Client(process.env.DATABASE_URL);
@@ -40,16 +40,25 @@ function collectSearchResults(request, response) {
         })
 }
 
-function handleError(res){
+function handleError(res) {
     return res.status(500).render('pages/error.ejs');
 }
 
 // Routes
 app.get('/', homeHandler);
 
+
 function homeHandler(request, response) {
-    response.status(200).render('index');
+    const SQL = 'SELECT * FROM books;';
+    return client.query(SQL)
+        .then(results => {
+            let books = results.rows;
+            response.render('pages/index.ejs'), {
+                saved: books
+            }
+        });
 }
+
 
 function renderTest(request, response) {
     response.render('pages/index.ejs');
@@ -57,7 +66,7 @@ function renderTest(request, response) {
 
 function Book(obj) {
     this.title = data.title ? data.title : 'No Title Available';
-    this.author = data.author ? data.author[0] :'No Author Available';
+    this.author = data.author ? data.author[0] : 'No Author Available';
     this.description = data.description ? data.description : '*** No Description Available ***';
     this.images = data.imageLinks ? imageLinks.thumbnail : 'No Image Available';
 }
