@@ -5,6 +5,7 @@
     <title> Book App</title>
     <link rel= "stylesheet" href="/public/styles/reset.css">
     <link rel="stylesheet" href="styles.css">
+    <!-- <%- include ('layout/head') %> -->
 </head>
 
 <body>
@@ -17,7 +18,20 @@
             </legend>
         </fieldset>
     </form>
-</body>
 
+
+<section>
+    <h1>My Books</h1>
+    <% data.forEach(task =>{%>
+        <ul>
+            <li>Title : <%= task.title %></li>
+            <li>Status: <%= task.status %></li>
+            <a href="tasks/<%= task.id"%>View Books</a>
+        </ul>
+        <%})%>
+
+    })
+</section>
+</body>
 
 </html>
