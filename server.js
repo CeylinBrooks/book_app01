@@ -6,6 +6,10 @@ const superagent = require('superagent');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const client = new pageXOffset.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('error', err => console.error(err));
+
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
@@ -32,19 +36,27 @@ function collectSearchResults(request, response) {
         })
 }
 
-function handleError(res){
-    return res.status(500).render('pages/error.ejs');
-}
+// function handleError(res){
+//     return res.status(500).render('pages/error.ejs');
+// }
 
-
+// Routes
 app.get('/', homeHandler);
+//app.get('/', )
+
 
 function homeHandler(request, response) {
-    response.status(200).render('index');
+    const SQL = 'SELECT * FROM books;';
+    return client.query(SQL)
+        .then(results => {
+            let books = results.rows;
+            response.render('pages/index.ejs'), {
+                saved: books} });
 }
 
 function renderTest(request, response) {
     response.render('pages/index.ejs');
+
 }
 
 function Book(obj) {
