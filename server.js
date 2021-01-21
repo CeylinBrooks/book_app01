@@ -16,9 +16,9 @@ const PORT = process.env.PORT || 3000;
 
 // Express Middleware
 
-const client = new pg.Client(process.env.DATABASE_URL);
-client.connect();
-client.on('error', err => console.error(err));
+// const client = new pg.Client(process.env.DATABASE_URL);
+// client.connect();
+// client.on('error', err => console.error(err));
 
 
 app.use(express.static('./public'));
