@@ -9,6 +9,7 @@ const { response } = require('express');
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
+console.log(client);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,7 +60,8 @@ function handleError(res) {
 
 // Routes
 app.get('/', homeHandler);
-//app.get('/', )
+app.put('/update/:id', updateBook);
+app.delete('/delete/:id', deleteBook);
 
 
 
@@ -76,6 +78,27 @@ function homeHandler(request, response) {
 function renderTest(request, response) {
     response.render('pages/index.ejs');
 
+}
+
+function updateBook (request, response) {
+    let id = request.params.id;
+    let { author, title, isbn, image_url, description} = request.body;
+    let SQL = 'UPDATE books SET author = $1, title = $2, isbn = $3, image_url = $4, description = $5 WHERE  id = $6;' 
+    let safeValues = [author, title, isbn, image_url, description, id];
+    client.query (SQL, safeValues)
+    .then( ()=> {
+        response.status(200).redirect('/');
+    })
+}
+
+function deleteBook (resquest, response){
+    let id = request.params.id;
+    let SQL = 'DELETE FROM books WHERE id = $1;'
+    let safeValues = [id];
+    client.query(SQL, safeValues)
+    .then(() => {
+        response.status(200).redirect('/');
+    })
 }
 
 function Book(obj) {
